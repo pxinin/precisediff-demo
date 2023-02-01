@@ -4,7 +4,16 @@ import precisePlugin from "moment-precise-range-plugin";
 
 const MAX_DATE_ELEMENTS = 3;
 
-export function secondsToDiffs(seconds) {
+const SHORT_FORMS = {
+  years: "Y",
+  months: "M",
+  days: "D",
+  hours: "h",
+  minutes: "m",
+  seconds: "s",
+};
+
+export function secondsToDiffs(seconds, shortForm = false) {
   const now = moment();
   const nowPlusSeconds = now.clone().add(seconds, "seconds");
   const diffObj = now.preciseDiff(nowPlusSeconds, true);
@@ -14,7 +23,8 @@ export function secondsToDiffs(seconds) {
   const diff = [];
   Object.entries(diffObj).forEach(([key, value]) => {
     if (memberCount < MAX_DATE_ELEMENTS && value) {
-      diff.push(`${value}${key}`);
+      const suffix = shortForm ? SHORT_FORMS[key] : ` ${key}`;
+      diff.push(`${value}${suffix}`);
       memberCount++;
     }
   });
